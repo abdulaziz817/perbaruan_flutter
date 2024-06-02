@@ -1,50 +1,11 @@
-import 'package:contoh_ulangan_gw/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'splash_controller.dart';
 
-
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-
-    _animationController.forward();
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _navigateToLogin();
-      }
-    });
-  }
-
-  _navigateToLogin() async {
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginPage(),
-      ),
-    );
-  }
+class SplashScreen extends StatelessWidget {
+  final SplashController _controller = Get.put(SplashController());
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +17,11 @@ class _SplashScreenState extends State<SplashScreen>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ScaleTransition(
-              scale: _animation,
+              scale: _controller.animation,
               child: FadeTransition(
-                opacity: _animation,
+                opacity: _controller.animation,
                 child: Icon(
-                  Icons.school, // Ganti ikon disini
+                  Icons.school, // Change icon here
                   size: 100,
                   color: Colors.white,
                 ),
@@ -90,11 +51,5 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }

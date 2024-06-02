@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
+import 'package:get/get.dart';
+import 'sign_up_controller.dart';
 
 class SignUpPage extends StatelessWidget {
+  final SignUpController _controller = Get.put(SignUpController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +28,7 @@ class SignUpPage extends StatelessWidget {
               ),
               SizedBox(height: 32),
               TextField(
+                controller: _controller.emailController,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   filled: true,
@@ -37,6 +42,7 @@ class SignUpPage extends StatelessWidget {
               ),
               SizedBox(height: 16),
               TextField(
+                controller: _controller.passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Password',
@@ -51,9 +57,7 @@ class SignUpPage extends StatelessWidget {
               ),
               SizedBox(height: 24),
               AnimatedButton(
-                onPress: () {
-                  // Handle aksi sign up
-                },
+                onPress: _controller.signUp,
                 height: 60,
                 width: double.infinity,
                 text: 'Sign Up',
@@ -71,9 +75,7 @@ class SignUpPage extends StatelessWidget {
                 children: [
                   Text('Already have an account?'),
                   TextButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Kembali ke halaman login
-                    },
+                    onPressed: _controller.goToLogin,
                     child: Text(
                       'Login',
                       style: TextStyle(

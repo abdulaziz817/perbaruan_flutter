@@ -1,37 +1,12 @@
 import 'package:contoh_ulangan_gw/sign_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:get/get.dart';
+import 'login_controller.dart';
 import 'schedule_page.dart';
 
-
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  // Method untuk membuka aplikasi email
-  _launchEmailApp() async {
-    final Uri _emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: 'abdulaziizz817@gmail.com',
-      queryParameters: {
-        'subject': 'Login Request',
-        'body': 'I want to login using this email.',
-      },
-    );
-
-    if (await canLaunchUrl(_emailLaunchUri)) {
-      await launchUrl(_emailLaunchUri);
-    } else {
-      throw 'Could not launch email app';
-    }
-  }
+class LoginPage extends StatelessWidget {
+  final LoginController _controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
-            key: _formKey,
+            key: _controller.formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 32),
                 // TextFormField untuk email
                 TextFormField(
-                  controller: _emailController,
+                  controller: _controller.emailController,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     filled: true,
@@ -79,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 16),
                 // TextFormField untuk password
                 TextFormField(
-                  controller: _passwordController,
+                  controller: _controller.passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -100,14 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 24),
                 AnimatedButton(
-                  onPress: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SchedulePage()),
-                      );
-                    }
-                  },
+                  onPress: _controller.login,
                   height: 60,
                   width: double.infinity,
                   text: 'Login',
@@ -121,9 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 16),
                 TextButton(
-                  onPressed: () {
-                    _launchEmailApp();
-                  },
+                  onPressed: _controller.launchEmailApp,
                   child: Text(
                     'Login with Email',
                     style: TextStyle(
@@ -151,12 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text('Don\'t have an account?'),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
-                        );
-                      },
+                      onPressed: _controller.goToSignUp,
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
