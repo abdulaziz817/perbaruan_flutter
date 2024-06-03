@@ -45,28 +45,15 @@ class SchedulePage extends StatelessWidget {
                     return Card(
                       margin: EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
-                        title: Text(schedule["time"]),
-                        subtitle: Text('Status: ${schedule["status"]} - ${schedule["details"]}'),
-                        trailing: schedule["status"] == "Absent"
-                            ? Icon(
-                                Icons.warning,
-                                color: Colors.red,
-                              )
-                            : schedule["status"] == "Present"
-                                ? Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                  )
-                                : Icon(
-                                    Icons.access_time,
-                                    color: Colors.orange,
-                                  ),
+                        title: Text(schedule.title),
+                        subtitle: Text('Status: ${schedule.status} - ${schedule.details}'),
+                        trailing: _getStatusIcon(schedule.status),
                         onTap: () {
                           Get.dialog(
                             AlertDialog(
                               title: Text('Class Details'),
                               content: Text(
-                                'Time: ${schedule["time"]}\nStatus: ${schedule["status"]}\nDetails: ${schedule["details"]}',
+                                'Time: ${schedule.dateTime}\nStatus: ${schedule.status}\nDetails: ${schedule.details}',
                               ),
                               actions: [
                                 TextButton(
@@ -120,6 +107,19 @@ class SchedulePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Icon _getStatusIcon(String status) {
+    switch (status) {
+      case 'Absent':
+        return Icon(Icons.warning, color: Colors.red);
+      case 'Present':
+        return Icon(Icons.check_circle, color: Colors.green);
+      case 'Late':
+        return Icon(Icons.access_time, color: Colors.orange);
+      default:
+        return Icon(Icons.help, color: Colors.grey);
+    }
   }
 }
 

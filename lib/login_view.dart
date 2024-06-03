@@ -47,6 +47,8 @@ class LoginPage extends StatelessWidget {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
+                    } else if (!value.contains('@')) {
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -100,9 +102,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 TextButton(
-                  onPressed: () {
-                    // Handle login dengan Google
-                  },
+                  onPressed: _controller.chooseGoogleAccount,
                   child: Text(
                     'Login with Google',
                     style: TextStyle(

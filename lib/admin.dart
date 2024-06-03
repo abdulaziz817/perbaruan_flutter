@@ -11,6 +11,14 @@ class AdminPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Admin Page'),
         backgroundColor: Colors.indigo,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              _controller.logout();
+            },
+          ),
+        ],
       ),
       body: Obx(() {
         return _controller.schedules.isEmpty

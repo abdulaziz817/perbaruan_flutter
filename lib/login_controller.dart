@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'schedule_page.dart';
 import 'sign_up_view.dart';
+// import 'package:flutter_email_sender/flutter_email_sender.dart'; // tambahkan ini
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -12,6 +13,8 @@ class LoginController extends GetxController {
   void login() {
     if (formKey.currentState?.validate() ?? false) {
       Get.to(() => SchedulePage());
+    } else {
+      Get.snackbar('Error', 'Validation failed', snackPosition: SnackPosition.BOTTOM);
     }
   }
 
@@ -28,8 +31,15 @@ class LoginController extends GetxController {
     if (await canLaunchUrl(emailLaunchUri)) {
       await launchUrl(emailLaunchUri);
     } else {
-      throw 'Could not launch email app';
+      Get.snackbar('Error', 'Could not launch email app', snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  void chooseGoogleAccount() async {
+    // Logika untuk memilih akun Google
+    // Bisa menggunakan package seperti google_sign_in atau googleapis
+    // Untuk demonstrasi, menggunakan print statement
+    print('Google account selection goes here');
   }
 
   void goToSignUp() {

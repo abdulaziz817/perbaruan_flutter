@@ -1,4 +1,3 @@
-// TODO Implement this library.import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -24,7 +23,6 @@ class AdminController extends GetxController {
     if (formKey.currentState!.validate()) {
       if (selectedDateTime.value != null) {
         if (existingSchedule == null) {
-          // Create new schedule
           final newSchedule = Schedule(
             id: Uuid().v4(),
             title: titleController.text,
@@ -32,9 +30,9 @@ class AdminController extends GetxController {
           );
           schedules.add(newSchedule);
         } else {
-          // Update existing schedule
           existingSchedule.title = titleController.text;
           existingSchedule.dateTime = selectedDateTime.value!;
+          schedules.refresh();
         }
 
         titleController.clear();
@@ -50,6 +48,9 @@ class AdminController extends GetxController {
     if (schedule != null) {
       titleController.text = schedule.title;
       selectedDateTime.value = schedule.dateTime;
+    } else {
+      titleController.clear();
+      selectedDateTime.value = null;
     }
 
     Get.defaultDialog(
@@ -72,43 +73,34 @@ class AdminController extends GetxController {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                final newDateTime = await Get.defaultDialog<DateTime>(
-                  title: 'Select Date and Time',
-                  content: SizedBox(
-                    width: Get.width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: Get.height * 0.4,
-                            child: CalendarDatePicker(
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2101),
-                              onDateChanged: (date) async {
-                                final time = await showTimePicker(
-                                  context: Get.overlayContext!,
-                                  initialTime: TimeOfDay.fromDateTime(DateTime.now()),
-                                );
-                                if (time != null) {
-                                  Get.back(result: DateTime(date.year, date.month, date.day, time.hour, time.minute));
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                final newDateTime = await showDatePicker(
+                  context: Get.context!,
+                  initialDate: selectedDateTime.value ?? DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
                 );
                 if (newDateTime != null) {
-                  selectedDateTime.value = newDateTime;
+                  final time = await showTimePicker(
+                    context: Get.context!,
+                    initialTime: TimeOfDay.fromDateTime(selectedDateTime.value ?? DateTime.now()),
+                  );
+                  if (time != null) {
+                    selectedDateTime.value = DateTime(
+                      newDateTime.year,
+                      newDateTime.month,
+                      newDateTime.day,
+                      time.hour,
+                      time.minute,
+                    );
+                  }
                 }
               },
-              child: Obx(() => Text(selectedDateTime.value == null
-                  ? 'Select Date and Time'
-                  : '${selectedDateTime.value!.toLocal()}'.split(' ')[0])),
+              child: Obx(() => Text(
+                  selectedDateTime.value == null
+                      ? 'Select Date and Time'
+                      : '${selectedDateTime.value!.toLocal()}'.split(' ')[0],
+                ),
+              ),
             ),
           ],
         ),
@@ -155,5 +147,9 @@ class AdminController extends GetxController {
       );
       Fluttertoast.showToast(msg: 'Scanned Schedule: ${scannedSchedule.title}');
     }
+  }
+
+  void logout() {
+    Get.offAllNamed('/login');
   }
 }
